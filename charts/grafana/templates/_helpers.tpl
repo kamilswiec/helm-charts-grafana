@@ -202,6 +202,33 @@ Formats imagePullSecrets. Input is (dict "root" . "imagePullSecrets" .{specific 
 {{- end }}
 {{- end }}
 
+{{/*
+Returns sidecar authentication variables
+*/}}
+{{- define "grafana.sidecar.authenticationVars" -}}
+{{- if .Values.env.GF_SECURITY_ADMIN_USER }}
+- name: REQ_USERNAME
+  value: {{ .Values.env.GF_SECURITY_ADMIN_USER }}
+{{- else }}
+- name: REQ_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
+      key: {{ .Values.admin.userKey | default "admin-user" }}
+{{- end }}
+{{- if not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE }}
+{{- if .Values.env.GF_SECURITY_ADMIN_PASSWORD }}
+- name: REQ_PASSWORD
+  value: {{ .Values.env.GF_SECURITY_ADMIN_PASSWORD }}
+{{- else }}
+- name: REQ_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
+      key: {{ .Values.admin.passwordKey | default "admin-password" }}
+{{- end }}
+{{- end }}
+{{- end }}
 
 {{/*
  Checks whether or not the configSecret secret has to be created

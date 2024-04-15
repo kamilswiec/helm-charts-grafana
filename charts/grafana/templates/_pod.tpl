@@ -363,19 +363,8 @@ containers:
       - name: SCRIPT
         value: {{ quote . }}
       {{- end }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
-      - name: REQ_USERNAME
-        valueFrom:
-          secretKeyRef:
-            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
-            key: {{ .Values.admin.userKey | default "admin-user" }}
-      {{- end }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
-      - name: REQ_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
-            key: {{ .Values.admin.passwordKey | default "admin-password" }}
+      {{- if not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION }}
+      {{- include "grafana.sidecar.authenticationVars" . | indent 6 }}
       {{- end }}
       {{- if not .Values.sidecar.alerts.skipReload }}
       - name: REQ_URL
@@ -479,21 +468,10 @@ containers:
       - name: SCRIPT
         value: "{{ . }}"
       {{- end }}
+      {{- if not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION }}
+      {{- include "grafana.sidecar.authenticationVars" . | indent 6 }}
+      {{- end }}
       {{- if not .Values.sidecar.dashboards.skipReload }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
-      - name: REQ_USERNAME
-        valueFrom:
-          secretKeyRef:
-            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
-            key: {{ .Values.admin.userKey | default "admin-user" }}
-      {{- end }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
-      - name: REQ_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
-            key: {{ .Values.admin.passwordKey | default "admin-password" }}
-      {{- end }}
       - name: REQ_URL
         value: {{ .Values.sidecar.dashboards.reloadURL }}
       - name: REQ_METHOD
@@ -586,19 +564,8 @@ containers:
       - name: SCRIPT
         value: "{{ .Values.sidecar.datasources.script }}"
       {{- end }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
-      - name: REQ_USERNAME
-        valueFrom:
-          secretKeyRef:
-            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
-            key: {{ .Values.admin.userKey | default "admin-user" }}
-      {{- end }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
-      - name: REQ_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
-            key: {{ .Values.admin.passwordKey | default "admin-password" }}
+      {{- if not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION }}
+      {{- include "grafana.sidecar.authenticationVars" . | indent 6 }}
       {{- end }}
       {{- if not .Values.sidecar.datasources.skipReload }}
       - name: REQ_URL
@@ -690,19 +657,8 @@ containers:
       - name: SCRIPT
         value: "{{ .Values.sidecar.notifiers.script }}"
       {{- end }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
-      - name: REQ_USERNAME
-        valueFrom:
-          secretKeyRef:
-            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
-            key: {{ .Values.admin.userKey | default "admin-user" }}
-      {{- end }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
-      - name: REQ_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
-            key: {{ .Values.admin.passwordKey | default "admin-password" }}
+      {{- if not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION }}
+      {{- include "grafana.sidecar.authenticationVars" . | indent 6 }}
       {{- end }}
       {{- if not .Values.sidecar.notifiers.skipReload }}
       - name: REQ_URL
@@ -794,19 +750,8 @@ containers:
       - name: SKIP_TLS_VERIFY
         value: "{{ . }}"
       {{- end }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
-      - name: REQ_USERNAME
-        valueFrom:
-          secretKeyRef:
-            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
-            key: {{ .Values.admin.userKey | default "admin-user" }}
-      {{- end }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
-      - name: REQ_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
-            key: {{ .Values.admin.passwordKey | default "admin-password" }}
+      {{- if not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION }}
+      {{- include "grafana.sidecar.authenticationVars" . | indent 6 }}
       {{- end }}
       {{- if not .Values.sidecar.plugins.skipReload }}
       - name: REQ_URL
